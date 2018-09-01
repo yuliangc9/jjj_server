@@ -5,7 +5,7 @@
  *Author: kesheng, yuliang.cyl@alibaba-inc.com
  *Description: ---
  *Create: 2018-08-31 16:53:33
- *Last Modified: 2018-08-31 23:53:38
+ *Last Modified: 2018-09-01 12:56:38
  */
 package battle
 
@@ -21,7 +21,7 @@ var beginSignal []byte
 
 func init() {
 	leaveInfo, _ = json.Marshal(map[string]bool{"leave": true})
-	beginSignal, _ = json.Marshal(map[string]bool{"begin": true})
+	beginSignal, _ = json.Marshal(map[string]interface{}{"begin": true, "initHealth": 300})
 }
 
 type Battle struct {

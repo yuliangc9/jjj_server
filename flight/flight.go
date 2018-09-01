@@ -5,11 +5,12 @@
  *Author: kesheng, yuliang.cyl@alibaba-inc.com
  *Description: ---
  *Create: 2018-08-31 16:57:01
- *Last Modified: 2018-08-31 23:52:36
+ *Last Modified: 2018-09-01 12:55:14
  */
 package flight
 
 import (
+	"encoding/json"
 	"log"
 	"sync"
 
@@ -25,7 +26,8 @@ type Flight struct {
 	ws      *websocket.Conn
 	isLeave bool
 
-	Name string
+	Name       string
+	InitHealth int
 }
 
 func NewFlight(ws *websocket.Conn) *Flight {
@@ -44,7 +46,17 @@ func NewFlight(ws *websocket.Conn) *Flight {
 		return nil
 	}
 
-	f.Name = string(buffer[:n])
+	var playerInfo struct {
+		Name   string `json:name`
+		Health int    `json:initHealth`
+	}
+	err = json.Unmarshal(buffer[:n], &playerInfo)
+	if err != nil {
+		return nil
+	}
+
+	f.Name = playerInfo.Name
+	f.InitHealth = playerInfo.Health
 
 	log.Println(f.Name, "come!")
 
