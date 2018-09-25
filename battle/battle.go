@@ -5,7 +5,7 @@
  *Author: kesheng, yuliang.cyl@alibaba-inc.com
  *Description: ---
  *Create: 2018-08-31 16:53:33
- *Last Modified: 2018-09-01 22:21:22
+ *Last Modified: 2018-09-03 14:31:36
  */
 package battle
 
@@ -21,7 +21,6 @@ var beginSignal []byte
 
 func init() {
 	leaveInfo, _ = json.Marshal(map[string]bool{"leave": true})
-	beginSignal, _ = json.Marshal(map[string]interface{}{"begin": true, "initHealth": 300, "name": "hehe"})
 }
 
 type Battle struct {
@@ -54,9 +53,9 @@ func run(a, b *flight.Flight) {
 
 func (this *Battle) Fight() {
 	player1Info, _ := json.Marshal(map[string]interface{}{
-		"begin": true, "initHealth": 300, "name": this.player1.Name})
+		"begin": true, "initHealth": this.player1.InitHealth, "name": this.player1.Name})
 	player2Info, _ := json.Marshal(map[string]interface{}{
-		"begin": true, "initHealth": 300, "name": this.player2.Name})
+		"begin": true, "initHealth": this.player2.InitHealth, "name": this.player2.Name})
 	this.player1.Notify(player2Info)
 	this.player2.Notify(player1Info)
 
