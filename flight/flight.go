@@ -5,7 +5,7 @@
  *Author: kesheng, yuliang.cyl@alibaba-inc.com
  *Description: ---
  *Create: 2018-08-31 16:57:01
- *Last Modified: 2018-09-25 14:12:34
+ *Last Modified: 2018-09-27 11:25:37
  */
 package flight
 
@@ -29,7 +29,7 @@ type Flight struct {
 	isFighting bool
 
 	ws      *websocket.Conn
-	isLeave bool
+	IsLeave bool
 
 	Name       string
 	InitHealth int
@@ -41,7 +41,7 @@ func NewFlight(ws *websocket.Conn) *Flight {
 		end:        make(chan int),
 		lock:       &sync.RWMutex{},
 		ws:         ws,
-		isLeave:    false,
+		IsLeave:    false,
 		isFighting: false,
 	}
 
@@ -81,7 +81,7 @@ func (this *Flight) Notify(data []byte) error {
 }
 
 func (this *Flight) Read() ([]byte, error) {
-	buffer := make([]byte, 1024)
+	buffer := make([]byte, 10240)
 	n, err := this.ws.Read(buffer)
 	if err != nil {
 		log.Println(this.Name, "read data fail", err.Error())
@@ -93,7 +93,7 @@ func (this *Flight) Read() ([]byte, error) {
 }
 
 func (this *Flight) Leave() {
-	this.isLeave = true
+	this.IsLeave = true
 	this.ws.Close()
 	this.end <- 1
 }

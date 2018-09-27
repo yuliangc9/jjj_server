@@ -5,7 +5,7 @@
  *Author: kesheng, yuliang.cyl@alibaba-inc.com
  *Description: ---
  *Create: 2018-08-31 16:37:21
- *Last Modified: 2018-08-31 23:12:05
+ *Last Modified: 2018-09-27 11:27:45
  */
 package arena
 
@@ -46,7 +46,12 @@ func (this *Arena) OnPlayer(f *flight.Flight) {
 	}
 
 	log.Println(f.Name, "match!", this.waiter.Name)
-	b := battle.NewBattle(f, this.waiter)
+	b := battle.NewBattle(this.waiter, f)
+	if b.Check() != nil {
+		this.waiter = f
+		return
+	}
+
 	b.Fight()
 
 	this.waiter = nil

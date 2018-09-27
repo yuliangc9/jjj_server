@@ -5,7 +5,7 @@
  *Author: kesheng, yuliang.cyl@alibaba-inc.com
  *Description: ---
  *Create: 2018-08-31 16:53:33
- *Last Modified: 2018-09-03 14:31:36
+ *Last Modified: 2018-09-27 11:31:09
  */
 package battle
 
@@ -52,13 +52,22 @@ func run(a, b *flight.Flight) {
 }
 
 func (this *Battle) Fight() {
-	player1Info, _ := json.Marshal(map[string]interface{}{
-		"begin": true, "initHealth": this.player1.InitHealth, "name": this.player1.Name})
-	player2Info, _ := json.Marshal(map[string]interface{}{
-		"begin": true, "initHealth": this.player2.InitHealth, "name": this.player2.Name})
-	this.player1.Notify(player2Info)
-	this.player2.Notify(player1Info)
-
 	go run(this.player1, this.player2)
 	go run(this.player2, this.player1)
+}
+
+func (this *Battle) Check() error {
+	//player1 is waiter
+	player2Info, _ := json.Marshal(map[string]interface{}{
+		"begin": true, "initHealth": this.player2.InitHealth, "name": this.player2.Name})
+	err := this.player1.Notify(player2Info)
+	if err != nil {
+		return err
+	}
+
+	player1Info, _ := json.Marshal(map[string]interface{}{
+		"begin": true, "initHealth": this.player1.InitHealth, "name": this.player1.Name})
+	this.player2.Notify(player1Info)
+
+	return nil
 }
